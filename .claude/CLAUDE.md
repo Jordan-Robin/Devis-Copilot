@@ -3,7 +3,7 @@
 Application SPA de génération de devis par la voix ou le texte, sans auth ni BDD.
 Cible : auto-entrepreneurs et prestataires de services.
 
-> Specs fonctionnelles complètes : `@docs/ai-specs.md`
+> Specs fonctionnelles : `@docs/ai-specs.md` | Plan & avancement : `@docs/plan.md`
 
 ---
 
