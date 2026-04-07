@@ -1,0 +1,3 @@
+# Fichiers gitignorés à copier dans chaque worktree Claude
+.env
+.env.local
