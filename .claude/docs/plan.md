@@ -7,7 +7,7 @@
 | Phase 0 | ✅ Terminé | Setup Claude Code (CLAUDE.md, rules, skills, settings, worktreeinclude) |
 | Phase 1 | ✅ Terminé | Init Next.js 16 + dépendances IA |
 | Phase 2 | ✅ Terminé | Schéma Zod + useReducer |
-| Phase 3 | ⏳ À faire | Layout UI 50/50 (composants Chat + Invoice) |
+| Phase 3 | ✅ Terminé | Layout UI 50/50 (composants Chat + Invoice) |
 | Phase 4 | ⏳ À faire | Routes API IA (Whisper STT + Gemini LLM) |
 | Phase 5 | ⏳ À faire | Export PDF |
 
@@ -66,14 +66,18 @@ Décisions :
 
 ---
 
-## Phase 3 — Layout UI ⏳
+## Phase 3 — Layout UI ✅
 
-Composants à créer (utiliser `/new-component`) :
-- `ChatColumn` — conteneur colonne gauche
-- `MessageBubble` — bulle de message
-- `ChatInput` — zone texte + bouton micro
-- `InvoicePreview` — conteneur colonne droite, aperçu A4
-- `InvoiceItem` — ligne de prestation éditable
+Composants créés :
+- `ChatColumn` — conteneur colonne gauche, gère messages + state input + scroll auto
+- `MessageBubble` — bulle user (bleue, droite) / assistant (grise, gauche)
+- `ChatInput` — textarea (Entrée = envoi), bouton micro animé, bouton send
+- `InvoicePreview` — aperçu A4 avec totaux calculés dynamiquement
+- `InvoiceItem` — ligne éditable WYSIWYG (clic direct sur chaque champ)
+
+Décisions :
+- `ChatColumn` et `InvoicePreview` ont chacun leur `useReducer` local pour l'instant
+- En Phase 4 : state remonté dans `page.tsx` pour que le stream Gemini mette à jour l'aperçu en temps réel
 
 ---
 
