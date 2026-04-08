@@ -1,12 +1,29 @@
 "use client"
 
-import { useReducer } from "react"
+import { useReducer, useEffect } from "react"
 import { invoiceReducer, initialInvoice } from "@/lib/invoice-reducer"
+import { InvoiceSchema } from "@/lib/schemas"
 import { InvoiceItem } from "./InvoiceItem"
-import type { InvoiceItem as InvoiceItemType } from "@/types/invoice"
+import type { Company } from "@/components/chat/CompanyModal"
+import type { DeepPartial } from "ai"
+import type { Invoice, InvoiceItem as InvoiceItemType } from "@/types/invoice"
 
-export const InvoicePreview = () => {
+type Props = {
+  invoice: DeepPartial<Invoice> | undefined
+  company: Company | null
+}
+
+export const InvoicePreview = ({ invoice: aiInvoice, company }: Props) => {
   const [invoice, dispatch] = useReducer(invoiceReducer, initialInvoice)
+
+  // Synchronise le state local quand l'IA génère un nouveau devis
+  useEffect(() => {
+    if (!aiInvoice) return
+    const parsed = InvoiceSchema.safeParse(aiInvoice)
+    if (parsed.success) {
+      dispatch({ type: "SET_INVOICE", payload: parsed.data })
+    }
+  }, [aiInvoice])
 
   const totalHT = invoice.items.reduce((sum, i) => sum + i.quantite * i.prix_ht, 0)
   const totalTVA = invoice.items.reduce(
@@ -22,6 +39,12 @@ export const InvoicePreview = () => {
   const handleRemove = (index: number) => {
     dispatch({ type: "REMOVE_ITEM", payload: { index } })
   }
+
+  // Affichage progressif pendant le streaming (données partielles de l'IA)
+  const displayClient = aiInvoice?.client ?? invoice.client
+  const displayItems = (aiInvoice?.items ?? invoice.items) as InvoiceItemType[]
+  const displayNumero = aiInvoice?.numero_devis ?? invoice.numero_devis
+  const displayDate = aiInvoice?.date ?? invoice.date
 
   return (
     <section className="w-1/2 h-full flex flex-col bg-gray-50 overflow-y-auto">
@@ -40,22 +63,35 @@ export const InvoicePreview = () => {
           <div className="flex justify-between items-start">
             <div>
               <p className="text-xl font-bold text-gray-900">DEVIS</p>
-              <p className="text-gray-400 text-xs">N° {invoice.numero_devis}</p>
-              <p className="text-gray-400 text-xs">{invoice.date}</p>
+              <p className="text-gray-400 text-xs">N° {displayNumero}</p>
+              <p className="text-gray-400 text-xs">{displayDate}</p>
             </div>
             <div className="text-right">
-              <p className="font-semibold">Votre entreprise</p>
-              <p className="text-gray-400 text-xs">À configurer — Phase 5</p>
+              {company?.nom ? (
+                <>
+                  <p className="font-semibold">{company.nom}</p>
+                  {company.adresse && <p className="text-gray-400 text-xs whitespace-pre-line">{company.adresse}</p>}
+                  {company.email && <p className="text-gray-400 text-xs">{company.email}</p>}
+                  {company.telephone && <p className="text-gray-400 text-xs">{company.telephone}</p>}
+                  {company.siren && <p className="text-gray-400 text-xs">SIREN : {company.siren}</p>}
+                  {company.tva_intracom && <p className="text-gray-400 text-xs">TVA : {company.tva_intracom}</p>}
+                </>
+              ) : (
+                <>
+                  <p className="font-semibold text-gray-300">Votre entreprise</p>
+                  <p className="text-gray-300 text-xs italic">Cliquez sur "Mon entreprise" pour configurer</p>
+                </>
+              )}
             </div>
           </div>
 
           {/* Client */}
           <div className="border border-gray-100 rounded p-4 bg-gray-50">
             <p className="text-xs text-gray-400 mb-1 uppercase tracking-wide">Destinataire</p>
-            {invoice.client.nom ? (
+            {displayClient?.nom ? (
               <>
-                <p className="font-medium">{invoice.client.nom}</p>
-                <p className="text-gray-500 whitespace-pre-line">{invoice.client.adresse}</p>
+                <p className="font-medium">{displayClient.nom}</p>
+                <p className="text-gray-500 whitespace-pre-line">{displayClient.adresse}</p>
               </>
             ) : (
               <p className="text-gray-300 italic">Client généré par l'IA…</p>
@@ -77,14 +113,14 @@ export const InvoicePreview = () => {
                 </tr>
               </thead>
               <tbody>
-                {invoice.items.length === 0 ? (
+                {displayItems.length === 0 ? (
                   <tr>
                     <td colSpan={7} className="py-8 text-center text-gray-300 italic text-sm">
                       Les prestations apparaîtront ici…
                     </td>
                   </tr>
                 ) : (
-                  invoice.items.map((item, i) => (
+                  displayItems.map((item, i) => (
                     <InvoiceItem
                       key={i}
                       item={item}

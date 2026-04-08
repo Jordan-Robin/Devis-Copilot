@@ -101,6 +101,23 @@ Décisions :
 
 ---
 
+## Phase 4.5 — Améliorations UI ✅
+
+Fichiers créés :
+- `src/components/chat/CompanyModal.tsx` — modale formulaire (nom, adresse, email, téléphone, SIREN, TVA intracom), sauvegarde localStorage, exporte `loadCompany` et type `Company`
+
+Modifications :
+- `ChatInput` — textarea auto-resize (min 80px, max 200px), thème sombre, boutons mic/send empilés
+- `ChatColumn` — thème sombre slate-800, bouton "Mon entreprise" dans le header, prop `onCompanyChange`
+- `MessageBubble` — bulle assistant adaptée au fond sombre (slate-700)
+- `InvoicePreview` — reçoit `company` en prop, affiche les infos entreprise dans l'en-tête du devis
+- `page.tsx` — tient le state `company`, synchronise modale → aperçu en temps réel sans reload
+
+Décisions :
+- State `company` remonté dans `page.tsx` (même pattern que `invoice`) pour mise à jour instantanée sans event bus ni context
+
+---
+
 ## Phase 5 — Export PDF ⏳
 
 Options envisagées : `@react-pdf/renderer` ou `html2canvas` + `jsPDF`

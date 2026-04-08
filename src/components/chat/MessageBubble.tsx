@@ -14,7 +14,7 @@ export const MessageBubble = ({ role, content }: Props) => {
         className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm ${
           isUser
             ? "bg-blue-600 text-white rounded-br-sm"
-            : "bg-gray-100 text-gray-800 rounded-bl-sm"
+            : "bg-slate-700 text-slate-200 rounded-bl-sm"
         }`}
       >
         {content}
