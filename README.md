@@ -88,8 +88,8 @@ Validation Zod → InvoicePreview + Export PDF
 ### Installation
 
 ```bash
-git clone https://github.com/votre-repo/copilot-devis.git
-cd copilot-devis
+git clone https://github.com/Jordan-Robin/Devis-Copilot.git
+cd Devis-Copilot
 npm install
 ```
 
