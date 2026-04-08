@@ -9,7 +9,7 @@
 | Phase 2 | ✅ Terminé | Schéma Zod + useReducer |
 | Phase 3 | ✅ Terminé | Layout UI 50/50 (composants Chat + Invoice) |
 | Phase 4 | ✅ Terminé | Routes API IA (Whisper STT + OpenAI GPT-4o Mini) |
-| Phase 5 | ⏳ À faire | Export PDF |
+| Phase 5 | ✅ Terminé | Export PDF |
 
 ---
 
@@ -118,9 +118,18 @@ Décisions :
 
 ---
 
-## Phase 5 — Export PDF ⏳
+## Phase 5 — Export PDF ✅
 
-Options envisagées : `@react-pdf/renderer` ou `html2canvas` + `jsPDF`
+Fichiers créés :
+- `src/components/invoice/InvoicePDF.tsx` — document react-pdf (layout StyleSheet, pas Tailwind) avec en-tête, client, tableau prestations, totaux
+- `src/components/invoice/PDFDownloadButton.tsx` — bouton avec `PDFDownloadLink`, nom de fichier auto généré
+
+Modifications :
+- `InvoicePreview.tsx` — import dynamique `ssr: false` de `PDFDownloadButton` (react-pdf utilise des APIs navigateur), bouton visible uniquement si `items.length > 0`
+
+Décisions :
+- `@react-pdf/renderer` choisi sur `html2canvas` : PDF vectoriel (texte sélectionnable, impression propre)
+- Téléchargement direct navigateur, rien stocké côté serveur (cohérent avec specs "sans BDD")
 
 ---
 

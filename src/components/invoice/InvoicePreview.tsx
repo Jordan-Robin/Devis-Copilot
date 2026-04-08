@@ -1,12 +1,18 @@
 "use client"
 
 import { useReducer, useEffect } from "react"
+import dynamic from "next/dynamic"
 import { invoiceReducer, initialInvoice } from "@/lib/invoice-reducer"
 import { InvoiceSchema } from "@/lib/schemas"
 import { InvoiceItem } from "./InvoiceItem"
 import type { Company } from "@/components/chat/CompanyModal"
 import type { DeepPartial } from "ai"
 import type { Invoice, InvoiceItem as InvoiceItemType } from "@/types/invoice"
+
+const PDFDownloadButton = dynamic(
+  () => import("./PDFDownloadButton").then((m) => m.PDFDownloadButton),
+  { ssr: false, loading: () => <button className="text-xs text-gray-300 border border-gray-200 rounded px-3 py-1">Chargement…</button> }
+)
 
 type Props = {
   invoice: DeepPartial<Invoice> | undefined
@@ -51,9 +57,9 @@ export const InvoicePreview = ({ invoice: aiInvoice, company }: Props) => {
       {/* Header toolbar */}
       <div className="px-6 py-4 border-b border-gray-200 bg-white flex justify-between items-center">
         <h2 className="font-semibold text-gray-800">Aperçu du devis</h2>
-        <button className="text-xs text-gray-400 border border-gray-200 rounded px-3 py-1 hover:bg-gray-50">
-          Exporter PDF — Phase 5
-        </button>
+        {invoice.items.length > 0 && (
+          <PDFDownloadButton invoice={invoice} company={company} />
+        )}
       </div>
 
       {/* Document A4 */}
