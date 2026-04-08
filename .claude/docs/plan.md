@@ -8,7 +8,7 @@
 | Phase 1 | ✅ Terminé | Init Next.js 16 + dépendances IA |
 | Phase 2 | ✅ Terminé | Schéma Zod + useReducer |
 | Phase 3 | ✅ Terminé | Layout UI 50/50 (composants Chat + Invoice) |
-| Phase 4 | ⏳ À faire | Routes API IA (Whisper STT + Gemini LLM) |
+| Phase 4 | ✅ Terminé | Routes API IA (Whisper STT + OpenAI GPT-4o Mini) |
 | Phase 5 | ⏳ À faire | Export PDF |
 
 ---
@@ -77,14 +77,27 @@ Composants créés :
 
 Décisions :
 - `ChatColumn` et `InvoicePreview` ont chacun leur `useReducer` local pour l'instant
-- En Phase 4 : state remonté dans `page.tsx` pour que le stream Gemini mette à jour l'aperçu en temps réel
+- En Phase 4 : state remonté dans `page.tsx` pour que le stream LLM mette à jour l'aperçu en temps réel
 
 ---
 
-## Phase 4 — Routes API IA ⏳
+## Phase 4 — Routes API IA ✅
 
-- `POST /api/transcribe` — reçoit un blob audio, retourne `{ data: { text }, error }`
-- `POST /api/generate-invoice` — reçoit du texte, stream un objet `Invoice` via `streamObject`
+Fichiers créés :
+- `src/app/api/transcribe/route.ts` — reçoit un blob audio (FormData), appel Whisper, retourne `{ data: { text }, error }`
+- `src/app/api/generate-invoice/route.ts` — reçoit du texte, stream un `Invoice` via `streamObject` + `gpt-4o-mini`
+
+Refactorisations :
+- `page.tsx` → client component, tient `useObject` (stream), passe `object` à `InvoicePreview` et `submit` à `ChatColumn`
+- `ChatColumn` → gère `MediaRecorder` pour le micro, appel `/api/transcribe`, gestion d'erreur via prop `error`
+- `InvoicePreview` → reçoit `invoice` en prop, sync via `useEffect` + `safeParse` Zod
+- `InvoiceItem` → valeurs avec `?? ""` / `?? 0` pour éviter le warning controlled/uncontrolled
+
+Décisions :
+- Switched de Gemini → OpenAI GPT-4o Mini (quota Gemini free tier épuisé)
+- `maxRetries: 0` sur `streamObject` pour éviter les retries inutiles sur erreurs 429
+- Suppression des `.default()` du schéma Zod (incompatible avec OpenAI structured output qui exige tous les champs dans `required`)
+- `@ai-sdk/react` installé séparément pour le hook `useObject`
 
 ---
 

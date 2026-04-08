@@ -2,19 +2,19 @@ import { z } from "zod"
 
 export const InvoiceItemSchema = z.object({
   description: z.string(),
-  quantite: z.number().min(1).default(1),
+  quantite: z.number().min(1),
   prix_ht: z.number(),
-  tva_taux: z.number().default(20),
+  tva_taux: z.number(),
 })
 
 export const InvoiceSchema = z.object({
   client: z.object({
-    nom: z.string().default(""),
-    adresse: z.string().default(""),
+    nom: z.string(),
+    adresse: z.string(),
   }),
-  items: z.array(InvoiceItemSchema).default([]),
-  numero_devis: z.string().default("DEV-2026-001"),
-  date: z.string().default(new Date().toLocaleDateString("fr-FR")),
+  items: z.array(InvoiceItemSchema),
+  numero_devis: z.string(),
+  date: z.string(),
 })
 
 export type InvoiceItem = z.infer<typeof InvoiceItemSchema>

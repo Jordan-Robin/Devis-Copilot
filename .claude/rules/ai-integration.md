@@ -18,7 +18,7 @@ Le prompt système pour Gemini doit toujours :
 
 ## Modèles utilisés
 - STT : `openai('whisper-1')` via `@ai-sdk/openai`
-- LLM : `google('gemini-1.5-flash')` via `@ai-sdk/google`
+- LLM : `openai('gpt-4o-mini')` via `@ai-sdk/openai`
 
 **Why:** Le Vercel AI SDK a des patterns spécifiques pour le streaming structuré. Suivre ces patterns évite les bugs de désérialisation et garantit une UX fluide.
 

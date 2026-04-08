@@ -18,7 +18,7 @@ export const InvoiceItem = ({ item, index, onChange, onRemove }: Props) => {
       <td className="py-2 pr-3">
         <input
           className="w-full text-sm focus:outline-none focus:bg-blue-50 rounded px-1"
-          value={item.description}
+          value={item.description ?? ""}
           onChange={(e) => onChange(index, { description: e.target.value })}
         />
       </td>
@@ -27,7 +27,7 @@ export const InvoiceItem = ({ item, index, onChange, onRemove }: Props) => {
           type="number"
           min={1}
           className="w-full text-sm text-center focus:outline-none focus:bg-blue-50 rounded px-1"
-          value={item.quantite}
+          value={item.quantite ?? 0}
           onChange={(e) => onChange(index, { quantite: Number(e.target.value) })}
         />
       </td>
@@ -35,7 +35,7 @@ export const InvoiceItem = ({ item, index, onChange, onRemove }: Props) => {
         <input
           type="number"
           className="w-full text-sm text-right focus:outline-none focus:bg-blue-50 rounded px-1"
-          value={item.prix_ht}
+          value={item.prix_ht ?? 0}
           onChange={(e) => onChange(index, { prix_ht: Number(e.target.value) })}
         />
       </td>
@@ -43,7 +43,7 @@ export const InvoiceItem = ({ item, index, onChange, onRemove }: Props) => {
         <input
           type="number"
           className="w-full text-sm text-center focus:outline-none focus:bg-blue-50 rounded px-1"
-          value={item.tva_taux}
+          value={item.tva_taux ?? 0}
           onChange={(e) => onChange(index, { tva_taux: Number(e.target.value) })}
         />
       </td>

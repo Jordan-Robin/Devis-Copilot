@@ -28,7 +28,7 @@ npx tsc --noEmit   # Vérification TypeScript sans compilation
 | State | React `useReducer` |
 | IA Orchestration | Vercel AI SDK (`ai` + `@ai-sdk/google` + `@ai-sdk/openai`) |
 | STT | OpenAI Whisper (`whisper-1`) |
-| LLM | Google Gemini 1.5 Flash |
+| LLM | OpenAI GPT-4o Mini |
 | Validation | Zod |
 
 ---
