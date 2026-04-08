@@ -6,7 +6,7 @@
 |---|---|---|
 | Phase 0 | ✅ Terminé | Setup Claude Code (CLAUDE.md, rules, skills, settings, worktreeinclude) |
 | Phase 1 | ✅ Terminé | Init Next.js 16 + dépendances IA |
-| Phase 2 | ⏳ À faire | Schéma Zod + useReducer |
+| Phase 2 | ✅ Terminé | Schéma Zod + useReducer |
 | Phase 3 | ⏳ À faire | Layout UI 50/50 (composants Chat + Invoice) |
 | Phase 4 | ⏳ À faire | Routes API IA (Whisper STT + Gemini LLM) |
 | Phase 5 | ⏳ À faire | Export PDF |
@@ -53,27 +53,16 @@ Fichiers créés :
 
 ---
 
-## Phase 2 — Schéma Zod + useReducer ⏳
+## Phase 2 — Schéma Zod + useReducer ✅
 
-À créer :
-- `src/lib/schemas.ts` — `InvoiceSchema` Zod + type `Invoice` inféré
-- `src/lib/invoice-reducer.ts` — reducer + actions pour modifier la facture
-- `src/types/invoice.ts` — re-export des types pour usage dans les composants
+Fichiers créés :
+- `src/lib/schemas.ts` — `InvoiceItemSchema` + `InvoiceSchema` Zod, types inférés avec `z.infer`
+- `src/lib/invoice-reducer.ts` — 8 actions (`SET_INVOICE`, `SET_CLIENT`, `ADD_ITEM`, `UPDATE_ITEM`, `REMOVE_ITEM`, `SET_NUMERO_DEVIS`, `SET_DATE`, `RESET`)
+- `src/types/invoice.ts` — re-export des types depuis `@/lib/schemas` et `@/lib/invoice-reducer`
 
-Schéma cible (cf. ai-specs.md) :
-```typescript
-const InvoiceSchema = z.object({
-  client: z.object({ nom: z.string().default(""), adresse: z.string().default("") }),
-  items: z.array(z.object({
-    description: z.string(),
-    quantite: z.number().min(1).default(1),
-    prix_ht: z.number(),
-    tva_taux: z.number().default(20),
-  })).default([]),
-  numero_devis: z.string().default("DEV-2026-001"),
-  date: z.string().default(new Date().toLocaleDateString()),
-})
-```
+Décisions :
+- Types inférés depuis Zod, pas réécrits manuellement (source de vérité unique)
+- `SET_INVOICE` est l'action déclenchée par le stream `useObject` de Gemini
 
 ---
 
